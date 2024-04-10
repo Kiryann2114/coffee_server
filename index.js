@@ -23,7 +23,7 @@ const options = {
 
 const server = https.createServer(options, app);
 
-server.listen(port, ()=>{
+server.listen( ()=>{
     console.log('server ok');
     connsql.connect(err =>{
         if (err){console.log(err);}
