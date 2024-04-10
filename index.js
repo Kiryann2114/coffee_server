@@ -2,7 +2,7 @@ const express = require('express');
 const cors = require('cors')
 const md5 = require('md5')
 const app = express();
-const port = 80;
+const port = 3001;
 const https = require('node:https');
 const fs = require('node:fs');
 const mysql = require('mysql2');
@@ -23,7 +23,7 @@ const options = {
 
 const server = https.createServer(options, app);
 
-server.listen( ()=>{
+server.listen(port, ()=>{
     console.log('server ok');
     connsql.connect(err =>{
         if (err){console.log(err);}
