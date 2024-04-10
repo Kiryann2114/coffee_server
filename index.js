@@ -1,13 +1,7 @@
 const express = require('express');
 const cors = require('cors')
 const md5 = require('md5')
-const https = require('https');
-const fs = require('fs');
 const app = express();
-const options = {
-    key: fs.readFileSync('ключ_для_ssl.key'),
-    cert: fs.readFileSync('сертификат_ssl.crt')
-};
 const port = 3001;
 const mysql = require('mysql2');
 const connsql = mysql.createConnection({
@@ -19,10 +13,7 @@ const connsql = mysql.createConnection({
 });
 
 app.use(cors({ origin: "*" }));
-
-const server = https.createServer(options, app);
-
-server.listen(port, ()=>{
+app.listen(port, ()=>{
     console.log('server ok');
     connsql.connect(err =>{
         if (err){console.log(err);}
