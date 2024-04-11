@@ -7,11 +7,10 @@ const https = require('node:https');
 const fs = require('node:fs');
 const mysql = require('mysql2');
 const connsql = mysql.createConnection({
-    host:"79.174.88.169",
-    port: "15901",
-    user:"admin",
-    password:"KKiriLL2114!",
-    database:"CoffeeGodine"
+    host:"37.140.192.191",
+    user:"u2588670_root",
+    password:"66AxnmyTLx3CS1ZR",
+    database:"u2588670_GodineCoffee"
 });
 
 app.use(cors({ origin: "*" }));
