@@ -76,17 +76,9 @@ app.post('/api/UpdateItem', (req, res) => {
     let query = 'select count(*) <> 0 as res from users where id = 0 and mail = "' + req.body.mail + '" and password = "' + md5(req.body.pass) + '"';
     connsql.query(query,(err,result,field) => {
         if(result[0]){
-            let query1 = "UPDATE Tovar SET 'name' = '" + req.body.name + "','opisanie' = '" + req.body.opisanie + "','price' = '" + req.body.price + "','optprice' = '" + req.body.optprice + "', WHERE Tovar.id = " + req.body.id;
+            let query1 = "UPDATE Tovar SET name = '" + req.body.name + "', opisanie = '" + req.body.opisanie + "' ,price = '" + req.body.price + "', optprice = '" + req.body.optprice + "' WHERE Tovar.id = " + req.body.id;
             connsql.query(query1)
         }
-    })
-});
-
-app.post('/api/TovarUpdate', (req, res) => {
-    let query = 'select price from Tovar';
-
-    connsql.query(query,(err,result,field) => {
-        res.json(result);
     })
 });
 
