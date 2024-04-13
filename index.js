@@ -6,11 +6,28 @@ const port = 3001;
 const https = require('node:https');
 const fs = require('node:fs');
 const mysql = require('mysql2');
-const connsql = mysql.createConnection({
-    host:"37.140.192.191",
-    user:"u2588670_root",
-    password:"66AxnmyTLx3CS1ZR",
-    database:"u2588670_GodineCoffee"
+
+function connectToDatabase() {
+    const dbConnection = mysql.createConnection({
+        host:"37.140.192.191",
+        user:"u2588670_root",
+        password:"66AxnmyTLx3CS1ZR",
+        database:"u2588670_GodineCoffee"
+    });
+
+    return dbConnection;
+}
+
+let connsql = connectToDatabase();
+
+connsql.on('error', (err) => {
+    if (err.code === 'PROTOCOL_CONNECTION_LOST') {
+        console.log('Соединение с базой данных потеряно. Повторное подключение...');
+        connsql = connectToDatabase();
+    } else {
+        console.log('database ok');
+        throw err;
+    }
 });
 
 app.use(cors({ origin: "*" }));
@@ -24,10 +41,7 @@ const server = https.createServer(options, app);
 
 server.listen(port, ()=>{
     console.log('server ok');
-    connsql.connect(err =>{
-        if (err){console.log(err);}
-        else {console.log('database ok');}
-    })
+
 })
 
 app.get('/api/tovar',(req,res) => {
