@@ -18,6 +18,36 @@ let transporter = nodemailer.createTransport({
     },
 });
 
+async function sendMail(email, theme, text, textHtml) {
+
+    let transporter = nodemailer.createTransport({
+        pool: true,
+        host: 'mail.godinecoffee.ru',
+        port: 465,
+        secure: true,
+        auth: {
+            user: "info@godinecoffee.ru",
+            pass: "KKiriLL2114",
+        },
+    })
+
+    let message = {
+        from: '"info" <info@godinecoffee.ru>',
+        to: email,
+        subject: theme,
+        text: text,
+        html: textHtml
+    }
+
+    let info = await transporter.sendMail(message)
+
+    if (info.response.substr(0, 3) == '250') {
+        return `Письмо успешно отправлено на адрес ${email}!`
+    }
+
+    return `Ошибка отправки письма на адрес ${email}!`
+}
+
 function connectToDatabase() {
     const dbConnection = mysql.createConnection({
         host:"37.140.192.191",
@@ -179,11 +209,7 @@ app.post('/api/UpdateInfoUser', (req, res) => {
     connsql.query(query)
 });
 
-app.post('/api/SendMailReset', (req, res) => {
-    transporter.sendMail({
-        from: '"info" <info@godinecoffee.ru>',
-        to: req.body.mail,
-        subject: 'Message from Node js',
-        text: 'This message was sent from Node js server.',
-    });
+app.post('/api/SendMailReset', async (req, res) => {
+    let textHtml = "<b>Привет мир!</b>"
+    await sendMail(req.body.mail, 'Message from Node js', 'This message was sent from Node js server.', textHtml)
 });
