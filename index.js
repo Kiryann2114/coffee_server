@@ -8,16 +8,6 @@ const https = require('node:https');
 const fs = require('node:fs');
 const mysql = require('mysql2');
 
-let transporter = nodemailer.createTransport({
-    host: 'mail.godinecoffee.ru',
-    port: 465,
-    secure: true,
-    auth: {
-        user: "info@godinecoffee.ru",
-        pass: "KKiriLL2114",
-    },
-});
-
 async function sendMail(email, theme, text, textHtml) {
 
     let transporter = nodemailer.createTransport({
