@@ -1,11 +1,22 @@
 const express = require('express');
 const cors = require('cors')
 const md5 = require('md5')
+const nodemailer = require('nodemailer');
 const app = express();
 const port = 3001;
 const https = require('node:https');
 const fs = require('node:fs');
 const mysql = require('mysql2');
+
+let transporter = nodemailer.createTransport({
+    host: 'mail.godinecoffee.ru',
+    port: 465,
+    secure: true,
+    auth: {
+        user: "info@godinecoffee.ru",
+        pass: "KKiriLL2114",
+    },
+});
 
 function connectToDatabase() {
     const dbConnection = mysql.createConnection({
@@ -166,4 +177,13 @@ app.post('/api/UpdateInfoUser', (req, res) => {
         query = 'UPDATE users SET name = "' + req.body.name + '",mail = "' + req.body.mail + '",tel = "' + req.body.tel + '" WHERE mail = "' + req.body.maillog + '" and password = "' + md5(req.body.passlog) + '"';
     }
     connsql.query(query)
+});
+
+app.post('/api/SendMailReset', (req, res) => {
+    transporter.sendMail({
+        from: '"info" <info@godinecoffee.ru>',
+        to: req.body.mail,
+        subject: 'Message from Node js',
+        text: 'This message was sent from Node js server.',
+    });
 });
