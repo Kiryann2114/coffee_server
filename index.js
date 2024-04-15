@@ -12,16 +12,13 @@ async function sendMail(email, theme, text, textHtml) {
 
     let transporter = nodemailer.createTransport({
         host: "mail.godinecoffee.ru",
-        port: 587,
-        secure: false,
+        port: 465,
+        secure: true,
         logger: true,
         debug: true,
         auth: {
             user: 'info@godinecoffee.ru',
             pass: 'KKiriLL2114'
-        },
-        tls: {
-            rejectUnauthorized: false
         }
     });
 
