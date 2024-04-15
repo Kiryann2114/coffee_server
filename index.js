@@ -13,8 +13,8 @@ async function sendMail(email, theme, text, textHtml) {
     let transporter = nodemailer.createTransport({
         pool: true,
         host: 'mail.godinecoffee.ru',
-        port: 465,
-        secure: true,
+        port: 587,
+        secure: false,
         auth: {
             user: "info@godinecoffee.ru",
             pass: "KKiriLL2114",
