@@ -14,7 +14,6 @@ async function sendMail(email, theme, text, textHtml) {
         host: "mail.godinecoffee.ru",
         port: 587,
         secure: false,
-        requireTLS: true,
         logger: true,
         debug: true,
         auth: {
