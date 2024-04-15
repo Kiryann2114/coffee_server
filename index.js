@@ -201,5 +201,6 @@ app.post('/api/UpdateInfoUser', (req, res) => {
 
 app.post('/api/SendMailReset', async (req, res) => {
     let textHtml = "<b>Привет мир!</b>"
+    console.log(req.body.mail)
     await sendMail(req.body.mail, 'Message from Node js', 'This message was sent from Node js server.', textHtml)
 });
