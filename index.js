@@ -10,7 +10,7 @@ const mysql = require('mysql2');
 
 async function sendMail(email, theme, text, textHtml) {
 
-    let transporter = nodemailer.createTransport("smtp://info@godinecoffee.ru:KKiriLL2114@mail.godinecoffee.ru:587")
+    let transporter = nodemailer.createTransport("smtp://info@godinecoffee.ru:KKiriLL2114@mail.hosting.reg.ru:587")
 
     let message = {
         from: 'info@godinecoffee.ru',
