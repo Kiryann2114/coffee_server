@@ -11,13 +11,12 @@ const mysql = require('mysql2');
 async function sendMail(email, theme, text, textHtml) {
 
     let transporter = nodemailer.createTransport({
-        host: "mail.godinecoffee.ru", // имя хоста
-        secureConnection: false, // TLS требует, чтобы SecureConnection было ложным
-        port: 587, // порт для безопасного SMTP
-        tls: {
-            ciphers: 'SSLv3'
-        },
-        requireTLS:true, // этот параметр решил для меня проблему
+        host: "mail.godinecoffee.ru",
+        port: 587,
+        secure: false,
+        requireTLS: true,
+        logger: true,
+        debug: true,
         auth: {
             user: 'info@godinecoffee.ru',
             pass: 'KKiriLL2114'
