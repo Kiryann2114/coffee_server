@@ -11,7 +11,7 @@ const mysql = require('mysql2');
 async function sendMail(email, theme, text, textHtml) {
 
     let transporter = nodemailer.createTransport({
-        host: "smtp-mail.godinecoffee.ru",
+        host: "mail.godinecoffee.ru",
         port: 587,
         secure: false,
         requireTLS: true,
