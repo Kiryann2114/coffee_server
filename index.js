@@ -12,6 +12,8 @@ function sendMail(email, theme, text, textHtml) {
 
     let transporter = nodemailer.createTransport({
         service: 'Yandex',
+        logger:true,
+        debug:true,
         auth: {
             user: 'info@godinecoffee.ru',
             pass: 'gckpbjasgcbcybxe' },
