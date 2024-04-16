@@ -8,7 +8,7 @@ const https = require('node:https');
 const fs = require('node:fs');
 const mysql = require('mysql2');
 
-async function sendMail(email, theme, text, textHtml) {
+function sendMail(email, theme, text, textHtml) {
 
     let transporter = nodemailer.createTransport({
         service: 'Yandex',
@@ -25,7 +25,7 @@ async function sendMail(email, theme, text, textHtml) {
         html: textHtml
     }
 
-    let info = await transporter.sendMail(message)
+    transporter.sendMail(message)
 }
 
 let textHtml = "<b>Привет мир!</b>"
