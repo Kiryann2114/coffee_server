@@ -14,8 +14,6 @@ async function sendMail(email, theme, text, textHtml) {
         host: "smtp.yandex.ru",
         port: 25,
         secure: false,
-        logger:true,
-        debug:true,
         auth: {
             user: 'info@godinecoffee.ru',
             pass: 'gckpbjasgcbcybxe'
@@ -196,7 +194,7 @@ app.post('/api/UpdateInfoUser', (req, res) => {
 
 app.post('/api/SendMailReset', async (req, res) => {
     let textHtml = "<b>Привет мир!</b>"
-    console.log(req.body.mail)
+    console.log("send email " + req.body.mail)
     await sendMail(req.body.mail, 'Message from Node js', 'This message was sent from Node js server.', textHtml)
     res.json({status:"ok"});
 });
