@@ -11,14 +11,12 @@ const mysql = require('mysql2');
 async function sendMail(email, theme, text, textHtml) {
 
     let transporter = nodemailer.createTransport({
-        host: "mail.godinecoffee.ru",
+        host: "smtp.yandex.ru",
         port: 465,
         secure: true,
-        logger: true,
-        debug: true,
         auth: {
             user: 'info@godinecoffee.ru',
-            pass: 'KKiriLL2114'
+            pass: 'Godine_200113'
         }
     });
 
