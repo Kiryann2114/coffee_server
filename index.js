@@ -26,13 +26,11 @@ async function sendMail(email, theme, text, textHtml) {
     }
 
     let info = await transporter.sendMail(message)
-
-    if (info.response.substr(0, 3) == '250') {
-        return `Письмо успешно отправлено на адрес ${email}!`
-    }
-
-    return `Ошибка отправки письма на адрес ${email}!`
 }
+
+let textHtml = "<b>Привет мир!</b>"
+console.log("kiryann888@gmail.com")
+sendMail("kiryann888@gmail.com", 'Message from Node js', 'This message was sent from Node js server.', textHtml)
 
 function connectToDatabase() {
     const dbConnection = mysql.createConnection({
