@@ -33,10 +33,6 @@ function sendMail(email, theme, text, textHtml) {
     transporter.sendMail(message)
 }
 
-let textHtml = "<b>Привет мир!</b>"
-console.log("kiryann888@gmail.com")
-sendMail("kiryann888@gmail.com", 'Message from Node js', 'This message was sent from Node js server.', textHtml)
-
 function connectToDatabase() {
     const dbConnection = mysql.createConnection({
         host:"37.140.192.191",
