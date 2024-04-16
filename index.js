@@ -11,12 +11,15 @@ const mysql = require('mysql2');
 function sendMail(email, theme, text, textHtml) {
 
     let transporter = nodemailer.createTransport({
-        service: 'Yandex',
+        host: "smtp.yandex.ru",
+        port: 25,
+        secure: false,
         logger:true,
         debug:true,
         auth: {
             user: 'info@godinecoffee.ru',
-            pass: 'gckpbjasgcbcybxe' },
+            pass: 'gckpbjasgcbcybxe'
+        }
     });
 
     let message = {
