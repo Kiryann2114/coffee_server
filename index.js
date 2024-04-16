@@ -66,7 +66,7 @@ const options = {
 
 const server = https.createServer(options, app);
 
-app.listen(port, ()=>{
+server.listen(port, ()=>{
     console.log('server ok');
 
 })
