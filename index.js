@@ -8,7 +8,7 @@ const https = require('node:https');
 const fs = require('node:fs');
 const mysql = require('mysql2');
 
-function sendMail(email, theme, text, textHtml) {
+async function sendMail(email, theme, text, textHtml) {
 
     let transporter = nodemailer.createTransport({
         host: "smtp.yandex.ru",
@@ -30,7 +30,7 @@ function sendMail(email, theme, text, textHtml) {
         html: textHtml
     }
 
-    transporter.sendMail(message)
+    await transporter.sendMail(message)
 }
 
 function connectToDatabase() {
@@ -194,8 +194,8 @@ app.post('/api/UpdateInfoUser', (req, res) => {
     connsql.query(query)
 });
 
-app.post('/api/SendMailReset', (req, res) => {
+app.post('/api/SendMailReset', async (req, res) => {
     let textHtml = "<b>Привет мир!</b>"
     console.log(req.body.mail)
-    sendMail(req.body.mail, 'Message from Node js', 'This message was sent from Node js server.', textHtml)
+    await sendMail(req.body.mail, 'Message from Node js', 'This message was sent from Node js server.', textHtml)
 });
