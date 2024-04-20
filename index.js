@@ -203,7 +203,7 @@ app.post('/api/SendMailReset', async (req, res) => {
             console.log(result[0])
             let url = req.body.mail.toLowerCase() + "=" + result[0].password
 
-            let query1 = "INSERT INTO reset (url) VALUES ("+ url +")"
+            let query1 = "INSERT INTO reset (url) VALUES ('"+ url +"')"
             connsql.query(query1)
 
             let textHtml = "<a>https://godinecoffee.ru/resetURL?"+url+"</a>"
