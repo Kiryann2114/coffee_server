@@ -200,6 +200,7 @@ app.post('/api/SendMailReset', async (req, res) => {
     let query = 'Select password from users WHERE mail = "' + req.body.mail.toLowerCase() + '"'
     connsql.query(query,async (err, result, field) => {
         if (result[0]) {
+            console.log(result[0])
             let url = req.body.mail.toLowerCase() + "=" + result[0].password
 
             let query1 = "INSERT INTO reset (url) VALUES ("+ url +")"
