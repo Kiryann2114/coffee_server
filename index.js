@@ -204,14 +204,14 @@ app.post('/api/SendMailReset',(req, res) => {
 
             let query1 = "INSERT INTO reset (url) VALUES ('"+ url +"')"
             connsql.query(query1,async (err, result, field) => {
-                if (result[0]) {
+                if(err)
+                {
                     let textHtml = "<a href=https://godinecoffee.ru/resetURL?" + url + ">Перейдите по ссылке для восстановления пароля</a>"
 
                     await sendMail(req.body.mail.toLowerCase(), 'Восстановление пароля', 'Это сообщение отправлено для восстановления пароля.', textHtml)
                     res.json({status: "ok"});
                 }
-                if(err)
-                {
+                else {
                     let textHtml = "<a href=https://godinecoffee.ru/resetURL?" + url + ">Перейдите по ссылке для восстановления пароля</a>"
 
                     await sendMail(req.body.mail.toLowerCase(), 'Восстановление пароля', 'Это сообщение отправлено для восстановления пароля.', textHtml)
