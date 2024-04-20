@@ -143,9 +143,9 @@ app.post('/api/checkUser', (req, res) => {
 });
 
 app.post('/api/RegUser', (req, res) => {
-    let query = 'select count(*) <> 0 as res from users where mail = "' + req.body.mail.toLowerCase() + '"';
+    let query = 'select count(*) as res from users where mail = "' + req.body.mail.toLowerCase() + '"';
     connsql.query(query,(err,result,field) => {
-        if(!result[0]){
+        if(result[0].res === 0){
             let query1 = 'select max(id)+1 as res from users';
             connsql.query(query1,(err,resu,field) => {
                 let query2 = "INSERT INTO users (password, name, mail, tel, addres, korzina, liked, id) VALUES ('"+ md5(req.body.pass) +"', '"+ req.body.name +"', '"+ req.body.mail.toLowerCase() +"', '"+ req.body.tel +"', '', '', '', '"+ resu[0].res +"')"
