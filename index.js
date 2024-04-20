@@ -209,13 +209,13 @@ app.post('/api/SendMailReset',(req, res) => {
                     let textHtml = "<a href=https://godinecoffee.ru/resetURL?" + url + ">Перейдите по ссылке для восстановления пароля</a>"
 
                     await sendMail(req.body.mail.toLowerCase(), 'Восстановление пароля', 'Это сообщение отправлено для восстановления пароля.', textHtml)
-                    res.json({status: "ok"});
+                    res.json("ok");
                 }
                 else {
                     let textHtml = "<a href=https://godinecoffee.ru/resetURL?" + url + ">Перейдите по ссылке для восстановления пароля</a>"
 
                     await sendMail(req.body.mail.toLowerCase(), 'Восстановление пароля', 'Это сообщение отправлено для восстановления пароля.', textHtml)
-                    res.json({status: "ok"});
+                    res.json("ok");
                 }
             })
         }
