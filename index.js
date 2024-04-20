@@ -197,14 +197,21 @@ app.post('/api/UpdateInfoUser', (req, res) => {
 
 app.post('/api/SendMailReset', async (req, res) => {
     console.log("send email " + req.body.mail.toLowerCase())
-    let query1 = 'UPDATE users SET korzina = "' + req.body.value + '" WHERE mail = "' + req.body.mail.toLowerCase() + '" and password = "' + md5(req.body.pass) + '"';
-    connsql.query(query1)
+    let query = 'Select password from users WHERE mail = "' + req.body.mail.toLowerCase()
+    connsql.query(query,async (err, result, field) => {
+        if (result[0]) {
+            let url = req.body.mail.toLowerCase() + "=" + result[0].password
 
-    let textHtml = "<link>{}</link>"
+            let query1 = "INSERT INTO reset (url) VALUES ("+ url +")"
+            connsql.query(query1)
 
+            let textHtml = "<a>https://godinecoffee.ru/resetURL?"+url+"</a>"
 
-    await sendMail(req.body.mail.toLowerCase(), 'Восстановление пароля', 'Это сообщение отправлено для восстановления пароля.', textHtml)
-    res.json({status:"ok"});
+            await sendMail(req.body.mail.toLowerCase(), 'Восстановление пароля', 'Это сообщение отправлено для восстановления пароля.', textHtml)
+            res.json({status: "ok"});
+        }
+    })
+
 });
 
 app.post('/api/ResetPass', async (req, res) => {
