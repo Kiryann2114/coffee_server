@@ -21,7 +21,7 @@ async function sendMail(email, theme, text, textHtml) {
     });
 
     let message = {
-        from: 'info@godinecoffee.ru',
+        from: 'GodineCoffee <info@godinecoffee.ru>',
         to: email,
         subject: theme,
         text: text,
