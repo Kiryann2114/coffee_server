@@ -205,7 +205,7 @@ app.post('/api/SendMailReset', async (req, res) => {
             let query1 = "INSERT INTO reset (url) VALUES ("+ url +")"
             connsql.query(query1)
 
-            let textHtml = "<a>https://godinecoffee.ru/resetURL?"+url+"</a>"
+            let textHtml = "<a>https://godinecoffee.ru/resetURL?</a>"
 
             await sendMail(req.body.mail.toLowerCase(), 'Восстановление пароля', 'Это сообщение отправлено для восстановления пароля.', textHtml)
             res.json({status: "ok"});
