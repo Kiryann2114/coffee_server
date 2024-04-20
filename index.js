@@ -154,6 +154,9 @@ app.post('/api/RegUser', (req, res) => {
                 })
             })
         }
+        else {
+            res.json(result[0]);
+        }
     })
 });
 
