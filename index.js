@@ -231,7 +231,7 @@ app.post('/api/ResetPass', async (req, res) => {
         connsql.query(query,(err,result,field) => {
             if(result[0]){
 
-                let query1 = 'UPDATE users SET password = "' + md5(req.body.pass) + '" WHERE mail = "' + req.body.url.split("?")[0] + '"';
+                let query1 = 'UPDATE users SET password = "' + md5(req.body.pass) + '" WHERE mail = "' + req.body.url.split("=")[0] + '"';
                 connsql.query(query1)
 
                 let query2 = "DELETE FROM reset WHERE reset.url LIKE '" + req.body.url + "%'"
