@@ -226,17 +226,17 @@ app.post('/api/SendMailReset',(req, res) => {
 app.post('/api/ResetPass', async (req, res) => {
     if(req.body.url !== "0" && req.body.url !== ""){
 
-        let query = 'select count(*) <> 0 as res from users where mail = "' + req.body.mail.toLowerCase() + '" and password = "' + md5(req.body.pass) + '"'
+        let query = 'select count(*) <> 0 as res from reset where url = "' + req.body.url + '"'
 
         connsql.query(query,(err,result,field) => {
             if(result[0]){
 
-                let query1 = 'UPDATE users SET korzina = "' + req.body.value + '" WHERE mail = "' + req.body.mail.toLowerCase() + '" and password = "' + md5(req.body.pass) + '"';
+                let query1 = 'UPDATE users SET password = "' + md5(req.body.pass) + '" WHERE mail = "' + req.body.mail.toLowerCase() + '"';
                 connsql.query(query1)
 
-                let query2 = 'UPDATE users SET korzina = "' + req.body.value + '" WHERE mail = "' + req.body.mail.toLowerCase() + '" and password = "' + md5(req.body.pass) + '"';
+                let query2 = "DELETE FROM reset WHERE reset.url LIKE '" + req.body.url + "%'"
                 connsql.query(query2)
-
+                res.json({status: "ok"});
             }
         })
     }
