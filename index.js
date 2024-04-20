@@ -195,21 +195,29 @@ app.post('/api/UpdateInfoUser', (req, res) => {
     connsql.query(query)
 });
 
-app.post('/api/SendMailReset', async (req, res) => {
+app.post('/api/SendMailReset',(req, res) => {
     console.log("send email " + req.body.mail.toLowerCase())
     let query = 'Select password from users WHERE mail = "' + req.body.mail.toLowerCase() + '"'
-    connsql.query(query,async (err, result, field) => {
+    connsql.query(query,(err, result, field) => {
         if (result[0]) {
-            console.log(result[0])
             let url = req.body.mail.toLowerCase() + "=" + result[0].password
 
             let query1 = "INSERT INTO reset (url) VALUES ('"+ url +"')"
-            connsql.query(query1)
+            connsql.query(query1,async (err, result, field) => {
+                if (result[0]) {
+                    let textHtml = "<a href=https://godinecoffee.ru/resetURL?" + url + ">Перейдите по ссылке для восстановления пароля</a>"
 
-            let textHtml = "<a href=https://godinecoffee.ru/resetURL?"+url+">Перейдите по ссылке для восстановления пароля</a>"
+                    await sendMail(req.body.mail.toLowerCase(), 'Восстановление пароля', 'Это сообщение отправлено для восстановления пароля.', textHtml)
+                    res.json({status: "ok"});
+                }
+                else
+                {
+                    let textHtml = "<a href=https://godinecoffee.ru/resetURL?" + url + ">Перейдите по ссылке для восстановления пароля</a>"
 
-            await sendMail(req.body.mail.toLowerCase(), 'Восстановление пароля', 'Это сообщение отправлено для восстановления пароля.', textHtml)
-            res.json({status: "ok"});
+                    await sendMail(req.body.mail.toLowerCase(), 'Восстановление пароля', 'Это сообщение отправлено для восстановления пароля.', textHtml)
+                    res.json({status: "ok"});
+                }
+            })
         }
     })
 
