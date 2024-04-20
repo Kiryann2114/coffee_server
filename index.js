@@ -236,7 +236,6 @@ app.post('/api/ResetPass', async (req, res) => {
                 let query2 = "DELETE FROM reset WHERE reset.url LIKE '" + req.body.url + "%'"
                 connsql.query(query2)
 
-                console.log(result[0]);
                 res.json({status: "ok"});
             }
         })
