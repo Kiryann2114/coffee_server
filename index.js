@@ -229,7 +229,7 @@ app.post('/api/ResetPass', async (req, res) => {
         let query = 'select count(*) <> 0 as res from reset where url = "' + req.body.url + '"'
 
         connsql.query(query,(err,result,field) => {
-            if(result[0]){
+            if(result[0].res !== 0){
                 console.log(result[0]);
                 let query1 = 'UPDATE users SET password = "' + md5(req.body.pass) + '" WHERE mail = "' + req.body.url.split("=")[0] + '"';
                 connsql.query(query1)
