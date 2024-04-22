@@ -262,6 +262,16 @@ app.post('/api/GetPaymentURL', (req, res) => {
         payment_mode:'full_payment',
     });
 
+    arrItems.push({
+        description:'Доставка',
+        amount: { value: '200.00', currency: 'RUB' },
+        vat_code:1,
+        quantity:"1",
+        measure:'piece',
+        payment_subject:'service',
+        payment_mode:'full_payment',
+    });
+
     for(let i = 0; i < arrBasket.length; i++) {
 
         let Item = arrBasket[i].split(":")
