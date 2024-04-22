@@ -2,7 +2,7 @@ const express = require('express');
 const cors = require('cors')
 const md5 = require('md5')
 const nodemailer = require('nodemailer');
-const fetch = require('node-fetch');
+const fetch = import('node-fetch').then((module) => module.default);
 const app = express();
 const port = 3001;
 const https = require('node:https');
