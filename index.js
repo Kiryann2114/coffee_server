@@ -264,7 +264,11 @@ app.post('/api/GetPaymentURL', (req, res) => {
             type: 'redirect',
             return_url: 'https://godinecoffee.ru/basket'
         },
-        description: 'Заказ №1'
+        customer:{
+            email:'kiryann888@gmail.com',
+            phone:'',
+        },
+        description: 'Оплата заказа для user@yoomoney.ru'
     };
     const requestDataString = JSON.stringify(requestData);
 
