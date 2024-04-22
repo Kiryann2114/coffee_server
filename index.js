@@ -250,6 +250,8 @@ app.post('/api/GetPaymentURL', (req, res) => {
 
     let arrItems = []
 
+    let arrBasket = req.body.basket.split(",")
+
     arrItems.push({
         description:'Доставка',
         amount: { value: '200.00', currency: 'RUB' },
@@ -260,21 +262,28 @@ app.post('/api/GetPaymentURL', (req, res) => {
         payment_mode:'full_payment',
     });
 
-    arrItems.push({
-        description:'кофе',
-        amount: { value: '100.00', currency: 'RUB' },
-        vat_code:1,
-        quantity:"1",
-        measure:'piece',
-        payment_subject:'commodity',
-        payment_mode:'full_payment',
-    });
+    for(let i = 0; i < arrBasket.length; i++) {
+
+        let query = 'SELECT price,name FROM Tovar WHERE id = ' + arrBasket[i].split(":")[0]
+
+        connsql.query(query,(err,result,field) => {
+            arrItems.push({
+                description:result[0].name,
+                amount: { value: result[0].price + '.00', currency: 'RUB' },
+                vat_code:1,
+                quantity:arrBasket[i].split(":")[1],
+                measure:'piece',
+                payment_subject:'commodity',
+                payment_mode:'full_payment',
+            });
+        })
+    }
 
     const url = 'https://api.yookassa.ru/v3/payments';
     const base64Credentials = Buffer.from('369984:test_3l-27_egpYA4GB8lsVLx1W5QxR0CGDxRQLG6X_VMHvk').toString('base64');
     const idempotenceKey = fastRandString();
     const requestData = {
-        amount: { value: '300.00', currency: 'RUB' },
+        amount: { value: String( Number(req.body.baskCount) + 200 ) + '.00', currency: 'RUB' },
         capture: true,
         confirmation: {
             type: 'redirect',
@@ -282,11 +291,11 @@ app.post('/api/GetPaymentURL', (req, res) => {
         },
         receipt:{
             customer:{
-                email:'kiryann888@gmail.com',
+                email:req.body.mail,
             },
             items:arrItems
         },
-        description: 'Оплата заказа для user@yoomoney.ru'
+        description: 'Оплата заказа для ' + req.body.mail
     };
     const requestDataString = JSON.stringify(requestData);
 
