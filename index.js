@@ -248,6 +248,28 @@ app.post('/api/ResetPass', async (req, res) => {
 
 app.post('/api/GetPaymentURL', (req, res) => {
 
+    let arrItems = []
+
+    arrItems.push({
+        description:'Доставка',
+        amount: { value: '200.00', currency: 'RUB' },
+        vat_code:1,
+        quantity:"1",
+        measure:'piece',
+        payment_subject:'service',
+        payment_mode:'full_payment',
+    });
+
+    arrItems.push({
+        description:'кофе',
+        amount: { value: '100.00', currency: 'RUB' },
+        vat_code:1,
+        quantity:"1",
+        measure:'piece',
+        payment_subject:'commodity',
+        payment_mode:'full_payment',
+    });
+
     const url = 'https://api.yookassa.ru/v3/payments';
     const base64Credentials = Buffer.from('369984:test_3l-27_egpYA4GB8lsVLx1W5QxR0CGDxRQLG6X_VMHvk').toString('base64');
     const idempotenceKey = fastRandString();
@@ -262,35 +284,7 @@ app.post('/api/GetPaymentURL', (req, res) => {
             customer:{
                 email:'kiryann888@gmail.com',
             },
-            items:[
-                {
-                    description:'Доставка',
-                    amount: { value: '200.00', currency: 'RUB' },
-                    vat_code:1,
-                    quantity:"1",
-                    measure:'piece',
-                    payment_subject:'service',
-                    payment_mode:'full_payment',
-                },
-                {
-                    description:'кофе',
-                    amount: { value: '100.00', currency: 'RUB' },
-                    vat_code:1,
-                    quantity:"1",
-                    measure:'piece',
-                    payment_subject:'commodity',
-                    payment_mode:'full_payment',
-                },
-                {
-                    description:'кофе2',
-                    amount: { value: '200.00', currency: 'RUB' },
-                    vat_code:1,
-                    quantity:"1",
-                    measure:'piece',
-                    payment_subject:'commodity',
-                    payment_mode:'full_payment',
-                },
-            ]
+            items:arrItems
         },
         description: 'Оплата заказа для user@yoomoney.ru'
     };
