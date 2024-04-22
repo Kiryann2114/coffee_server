@@ -8,14 +8,8 @@ const https = require('node:https');
 const fs = require('node:fs');
 const mysql = require('mysql2');
 
-function generateRandomString() {
-    var result = '';
-    var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    var charactersLength = characters.length;
-    for (var i = 0; i &lt; 50; i++) {
-        result += characters.charAt(Math.floor(Math.random() * charactersLength));
-    }
-    return result;
+function fastRandString() {
+    return [...Array(50)].map(() => (~~(Math.random() * 36)).toString(36)).join('');
 }
 
 async function sendMail(email, theme, text, textHtml) {
@@ -256,7 +250,7 @@ app.post('/api/GetPaymentURL', (req, res) => {
 
     const url = 'https://api.yookassa.ru/v3/payments';
     const base64Credentials = Buffer.from('369984:test_3l-27_egpYA4GB8lsVLx1W5QxR0CGDxRQLG6X_VMHvk').toString('base64');
-    const idempotenceKey = generateRandomString();
+    const idempotenceKey = fastRandString();
     const requestData = {
         amount: { value: '100.00', currency: 'RUB' },
         capture: true,
