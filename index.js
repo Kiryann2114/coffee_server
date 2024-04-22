@@ -252,7 +252,7 @@ app.post('/api/GetPaymentURL', (req, res) => {
     const base64Credentials = Buffer.from('369984:test_3l-27_egpYA4GB8lsVLx1W5QxR0CGDxRQLG6X_VMHvk').toString('base64');
     const idempotenceKey = fastRandString();
     const requestData = {
-        amount: { value: '100.00', currency: 'RUB' },
+        amount: { value: '300.00', currency: 'RUB' },
         capture: true,
         confirmation: {
             type: 'redirect',
