@@ -262,84 +262,87 @@ app.post('/api/GetPaymentURL', (req, res) => {
         payment_mode:'full_payment',
     });
 
-    arrItems.push({
-        description:'Доставка',
-        amount: { value: '200.00', currency: 'RUB' },
-        vat_code:1,
-        quantity:"1",
-        measure:'piece',
-        payment_subject:'service',
-        payment_mode:'full_payment',
-    });
+    let arrID = ""
 
     for(let i = 0; i < arrBasket.length; i++) {
 
         let Item = arrBasket[i].split(":")
 
-        let query = 'SELECT price,name FROM Tovar WHERE id = ' + Item[0]
+        if(i === arrBasket.length-1){
+            arrID += Item[0]
+        }
+        else {
+            arrID += Item[0] + ","
+        }
+    }
 
-        connsql.query(query,(err,result,field) => {
-            console.log(result[0].price + '.00')
+    let query = 'SELECT price,name FROM Tovar WHERE id in (' + arrID + ')'
+
+    connsql.query(query,(err,result,field) => {
+        for(let i = 0; i < arrBasket.length; i++) {
+
+            let Item = arrBasket[i].split(":")
+
+            console.log(result[i].price + '.00')
             arrItems.push({
-                description:result[0].name,
-                amount: { value: result[0].price + '.00', currency: 'RUB' },
+                description:result[i].name,
+                amount: { value: result[i].price + '.00', currency: 'RUB' },
                 vat_code:1,
                 quantity:Item[1],
                 measure:'piece',
                 payment_subject:'commodity',
                 payment_mode:'full_payment',
             });
-        })
-    }
-
-    const url = 'https://api.yookassa.ru/v3/payments';
-    const base64Credentials = Buffer.from('369984:test_3l-27_egpYA4GB8lsVLx1W5QxR0CGDxRQLG6X_VMHvk').toString('base64');
-    const idempotenceKey = fastRandString();
-    console.log(arrItems);
-    const requestData = {
-        amount: { value: String( Number(req.body.baskCount) + 200 ) + '.00', currency: 'RUB' },
-        capture: true,
-        confirmation: {
-            type: 'redirect',
-            return_url: 'https://godinecoffee.ru/'
-        },
-        receipt:{
-            customer:{
-                email:req.body.mail,
-            },
-            items:arrItems
-        },
-        description: 'Оплата заказа для ' + req.body.mail
-    };
-    const requestDataString = JSON.stringify(requestData);
-
-    const options = {
-        hostname: 'api.yookassa.ru',
-        path: '/v3/payments',
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Basic ${base64Credentials}`,
-            'Idempotence-Key': idempotenceKey,
-            'Content-Length': Buffer.byteLength(requestDataString)
         }
-    };
+        const url = 'https://api.yookassa.ru/v3/payments';
+        const base64Credentials = Buffer.from('369984:test_3l-27_egpYA4GB8lsVLx1W5QxR0CGDxRQLG6X_VMHvk').toString('base64');
+        const idempotenceKey = fastRandString();
+        console.log(arrItems);
+        const requestData = {
+            amount: { value: String( Number(req.body.baskCount) + 200 ) + '.00', currency: 'RUB' },
+            capture: true,
+            confirmation: {
+                type: 'redirect',
+                return_url: 'https://godinecoffee.ru/'
+            },
+            receipt:{
+                customer:{
+                    email:req.body.mail,
+                },
+                items:arrItems
+            },
+            description: 'Оплата заказа для ' + req.body.mail
+        };
+        const requestDataString = JSON.stringify(requestData);
 
-    const request = https.request(options, (resp) => {
-        let data = '';
-        resp.on('data', (chunk) => {
-            data += chunk;
+        const options = {
+            hostname: 'api.yookassa.ru',
+            path: '/v3/payments',
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Basic ${base64Credentials}`,
+                'Idempotence-Key': idempotenceKey,
+                'Content-Length': Buffer.byteLength(requestDataString)
+            }
+        };
+
+        const request = https.request(options, (resp) => {
+            let data = '';
+            resp.on('data', (chunk) => {
+                data += chunk;
+            });
+
+            resp.on('end', () => {
+                console.log(JSON.parse(data));
+            });
         });
 
-        resp.on('end', () => {
-            console.log(JSON.parse(data));
+        request.on('error', (error) => {
+            console.error('Error:', error);
         });
-    });
 
-    request.on('error', (error) => {
-        console.error('Error:', error);
-    });
-
-    request.write(requestDataString);
-    request.end();
+        request.write(requestDataString);
+        request.end();
+    })
 });
