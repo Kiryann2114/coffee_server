@@ -270,7 +270,7 @@ app.post('/api/GetPaymentURL', (req, res) => {
                     quantity:"1",
                     measure:'piece',
                     payment_subject:'commodity',
-                    payment_mode:'full_prepayment',
+                    payment_mode:'full_payment',
                 },
                 {
                     description:'кофе2',
@@ -279,7 +279,7 @@ app.post('/api/GetPaymentURL', (req, res) => {
                     quantity:"1",
                     measure:'piece',
                     payment_subject:'commodity',
-                    payment_mode:'full_prepayment',
+                    payment_mode:'full_payment',
                 },
             ]
         },
