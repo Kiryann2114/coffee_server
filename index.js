@@ -252,7 +252,7 @@ app.post('/api/GetPaymentURL', (req, res) => {
     const base64Credentials = Buffer.from('369984:test_3l-27_egpYA4GB8lsVLx1W5QxR0CGDxRQLG6X_VMHvk').toString('base64');
     const idempotenceKey = fastRandString();
     const requestData = {
-        amount: { value: '300.00', currency: 'RUB' },
+        amount: { value: '500.00', currency: 'RUB' },
         capture: true,
         confirmation: {
             type: 'redirect',
@@ -263,6 +263,15 @@ app.post('/api/GetPaymentURL', (req, res) => {
                 email:'kiryann888@gmail.com',
             },
             items:[
+                {
+                    description:'Доставка',
+                    amount: { value: '200.00', currency: 'RUB' },
+                    vat_code:1,
+                    quantity:"1",
+                    measure:'piece',
+                    payment_subject:'service',
+                    payment_mode:'full_payment',
+                },
                 {
                     description:'кофе',
                     amount: { value: '100.00', currency: 'RUB' },
