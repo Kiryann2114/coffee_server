@@ -269,6 +269,7 @@ app.post('/api/GetPaymentURL', (req, res) => {
         let query = 'SELECT price,name FROM Tovar WHERE id = ' + Item[0]
 
         connsql.query(query,(err,result,field) => {
+            console.log(result[0].price + '.00')
             arrItems.push({
                 description:result[0].name,
                 amount: { value: result[0].price + '.00', currency: 'RUB' },
