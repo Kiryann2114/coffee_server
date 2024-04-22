@@ -256,7 +256,7 @@ app.post('/api/GetPaymentURL', (req, res) => {
         capture: true,
         confirmation: {
             type: 'redirect',
-            return_url: 'https://godinecoffee.ru/basket'
+            return_url: 'https://godinecoffee.ru/'
         },
         receipt:{
             customer:{
