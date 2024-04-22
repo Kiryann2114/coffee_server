@@ -269,10 +269,9 @@ app.post('/api/GetPaymentURL', (req, res) => {
         let query = 'SELECT price,name FROM Tovar WHERE id = ' + Item[0]
 
         connsql.query(query,(err,result,field) => {
-            console.log(Number(result[0].price) * Number(Item[1]));
             arrItems.push({
                 description:result[0].name,
-                amount: { value: String(Number(result[0].price) * Number(Item[1])) + '.00', currency: 'RUB' },
+                amount: { value: result[0].price + '.00', currency: 'RUB' },
                 vat_code:1,
                 quantity:Item[1],
                 measure:'piece',
