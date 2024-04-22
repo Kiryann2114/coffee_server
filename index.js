@@ -250,7 +250,6 @@ app.post('/api/GetPaymentURL', (req, res) => {
 
     let arrItems = []
 
-    console.log(req.body.basket)
     let arrBasket = req.body.basket.split(",")
 
     arrItems.push({
