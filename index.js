@@ -258,9 +258,31 @@ app.post('/api/GetPaymentURL', (req, res) => {
             type: 'redirect',
             return_url: 'https://godinecoffee.ru/basket'
         },
-        customer:{
-            email:'kiryann888@gmail.com',
-            phone:'',
+        receipt:{
+            customer:{
+                email:'kiryann888@gmail.com',
+                phone:'',
+            },
+            items:[
+                {
+                    description:'кофе',
+                    amount: { value: '100.00', currency: 'RUB' },
+                    vat_code:1,
+                    quantity:"1",
+                    measure:'piece',
+                    payment_subject:'commodity',
+                    payment_mode:'full_prepayment',
+                },
+                {
+                    description:'кофе2',
+                    amount: { value: '200.00', currency: 'RUB' },
+                    vat_code:1,
+                    quantity:"1",
+                    measure:'piece',
+                    payment_subject:'commodity',
+                    payment_mode:'full_prepayment',
+                },
+            ]
         },
         description: 'Оплата заказа для user@yoomoney.ru'
     };
