@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors')
 const md5 = require('md5')
 const nodemailer = require('nodemailer');
+const fetch = require('node-fetch');
 const app = express();
 const port = 3001;
 const https = require('node:https');
@@ -240,4 +241,31 @@ app.post('/api/ResetPass', async (req, res) => {
             }
         })
     }
+});
+
+app.post('/api/GetPaymentURL', (req, res) => {
+    const url = 'https://api.yookassa.ru/v3/payments';
+    const base64Credentials = Buffer.from('<369984>:<test_3l-27_egpYA4GB8lsVLx1W5QxR0CGDxRQLG6X_VMHvk>').toString('base64');
+    const idempotenceKey = '<000001>';
+    const requestData = {
+        amount: { value: '100.00', currency: 'RUB' },
+        capture: true,
+        confirmation: { type: 'redirect', return_url: 'https://godinecoffee.ru/' },
+        description: 'Заказ №1'
+    };
+
+    const requestOptions = {
+        method: 'POST',
+        headers: {
+            'Authorization': `Basic ${base64Credentials}`,
+            'Idempotence-Key': idempotenceKey,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(requestData),
+    };
+
+    fetch(url, requestOptions)
+        .then(response => response.json())
+        .then(data => console.log(data))
+        .catch(error => console.error('Error:', error));
 });
