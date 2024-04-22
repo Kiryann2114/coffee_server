@@ -264,14 +264,17 @@ app.post('/api/GetPaymentURL', (req, res) => {
 
     for(let i = 0; i < arrBasket.length; i++) {
 
-        let query = 'SELECT price,name FROM Tovar WHERE id = ' + arrBasket[i].split(":")[0]
+        let Item = arrBasket[i].split(":")
+
+        let query = 'SELECT price,name FROM Tovar WHERE id = ' + Item[0]
 
         connsql.query(query,(err,result,field) => {
+            console.log(Number(result[0].price) * Number(Item[1]));
             arrItems.push({
                 description:result[0].name,
-                amount: { value: String(Number(result[0].price) * Number(arrBasket[i].split(":")[1])) + '.00', currency: 'RUB' },
+                amount: { value: String(Number(result[0].price) * Number(Item[1])) + '.00', currency: 'RUB' },
                 vat_code:1,
-                quantity:arrBasket[i].split(":")[1],
+                quantity:Item[1],
                 measure:'piece',
                 payment_subject:'commodity',
                 payment_mode:'full_payment',
