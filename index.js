@@ -269,7 +269,7 @@ app.post('/api/GetPaymentURL', (req, res) => {
         connsql.query(query,(err,result,field) => {
             arrItems.push({
                 description:result[0].name,
-                amount: { value: result[0].price + '.00', currency: 'RUB' },
+                amount: { value: String(Number(result[0].price) * Number(arrBasket[i].split(":")[1])) + '.00', currency: 'RUB' },
                 vat_code:1,
                 quantity:arrBasket[i].split(":")[1],
                 measure:'piece',
