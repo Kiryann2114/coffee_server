@@ -2,7 +2,6 @@ const express = require('express');
 const cors = require('cors')
 const md5 = require('md5')
 const nodemailer = require('nodemailer');
-const fetch = import('node-fetch').then((module) => module.default);
 const app = express();
 const port = 3001;
 const https = require('node:https');
@@ -244,28 +243,48 @@ app.post('/api/ResetPass', async (req, res) => {
 });
 
 app.post('/api/GetPaymentURL', (req, res) => {
+
     const url = 'https://api.yookassa.ru/v3/payments';
     const base64Credentials = Buffer.from('<369984>:<test_3l-27_egpYA4GB8lsVLx1W5QxR0CGDxRQLG6X_VMHvk>').toString('base64');
-    const idempotenceKey = '<000001>';
+    const idempotenceKey = '<0000001>';
     const requestData = {
         amount: { value: '100.00', currency: 'RUB' },
         capture: true,
-        confirmation: { type: 'redirect', return_url: 'https://godinecoffee.ru/' },
+        confirmation: {
+            type: 'redirect',
+            return_url: 'https://www.example.com/return_url'
+        },
         description: 'Заказ №1'
     };
+    const requestDataString = JSON.stringify(requestData);
 
-    const requestOptions = {
+    const options = {
+        hostname: 'api.yookassa.ru',
+        path: '/v3/payments',
         method: 'POST',
         headers: {
+            'Content-Type': 'application/json',
             'Authorization': `Basic ${base64Credentials}`,
             'Idempotence-Key': idempotenceKey,
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(requestData),
+            'Content-Length': Buffer.byteLength(requestDataString)
+        }
     };
 
-    fetch(url, requestOptions)
-        .then(response => response.json())
-        .then(data => console.log(data))
-        .catch(error => console.error('Error:', error));
+    const request = https.request(options, (resp) => {
+        let data = '';
+        resp.on('data', (chunk) => {
+            data += chunk;
+        });
+
+        resp.on('end', () => {
+            console.log(JSON.parse(data));
+        });
+    });
+
+    request.on('error', (error) => {
+        console.error('Error:', error);
+    });
+
+    request.write(requestDataString);
+    request.end();
 });
