@@ -261,7 +261,6 @@ app.post('/api/GetPaymentURL', (req, res) => {
         receipt:{
             customer:{
                 email:'kiryann888@gmail.com',
-                phone:'',
             },
             items:[
                 {
