@@ -254,7 +254,7 @@ app.post('/api/GetPaymentURL', (req, res) => {
 
     arrItems.push({
         description:'Доставка',
-        amount: { value: '200.00', currency: 'RUB' },
+        amount: { value: req.body.delprice, currency: 'RUB' },
         vat_code:1,
         quantity:"1",
         measure:'piece',
@@ -299,7 +299,7 @@ app.post('/api/GetPaymentURL', (req, res) => {
         const idempotenceKey = fastRandString();
         console.log(arrItems);
         const requestData = {
-            amount: { value: String( Number(req.body.baskCount) + 200 ) + '.00', currency: 'RUB' },
+            amount: { value: String( Number(req.body.baskCount) + Number(req.body.delprice)) + '.00', currency: 'RUB' },
             capture: true,
             confirmation: {
                 type: 'redirect',
