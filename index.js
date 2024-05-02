@@ -334,7 +334,7 @@ app.post('/api/GetPaymentURL', (req, res) => {
             });
 
             resp.on('end', () => {
-                console.log(JSON.parse(data.confirmation));
+                console.log(JSON.parse(data));
             });
         });
 
@@ -342,7 +342,7 @@ app.post('/api/GetPaymentURL', (req, res) => {
             console.error('Error:', error);
         });
 
-        request.write(requestDataString);
+        request.write(requestDataString.confirmation);
         request.end();
     })
 });
