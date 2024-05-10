@@ -339,7 +339,7 @@ app.post('/api/GetPaymentURL', (req, res) => {
 
                 await sendMail(req.body.mail.toLowerCase(), "Заказ для " + req.body.mail.toLowerCase(), 'Это сообщение отправлено для заказа.', textHtml)
 
-                let textHtml1 = "<p>заказ сформирован: "+ JSON.parse(data).id +" имя: "+ req.body.name +" телефон: "+ req.body.tel +" почта: "+ req.body.mail.toLowerCase() +"</p>" +
+                let textHtml1 = "<p>заказ сформирован: "+ JSON.parse(data).id +" имя: "+ req.body.name +" телефон: "+ req.body.tel +" почта: "+ req.body.mail.toLowerCase() +"</p>"
 
                 await sendMail("zakaz@godinecoffee.ru", "Заказ для " + req.body.mail.toLowerCase(), 'Это сообщение отправлено для заказа.', textHtml1)
             });
