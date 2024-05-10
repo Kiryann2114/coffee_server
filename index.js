@@ -336,13 +336,9 @@ app.post('/api/GetPaymentURL', (req, res) => {
                 console.log(JSON.parse(data).confirmation.confirmation_url);
                 sendMail(req.body.mail, "Заказ для " + req.body.mail, JSON.parse(data))
 
-                var str = JSON.stringify(data, null, 2);
+                let str = JSON.stringify(data, null, 2);
 
-                let pre = document.createElement("pre");
-
-                pre.innerText = str;
-
-                await sendMail(req.body.mail.toLowerCase(), "Заказ для " + req.body.mail.toLowerCase(), 'Это сообщение отправлено для восстановления пароля.', pre)
+                await sendMail(req.body.mail.toLowerCase(), "Заказ для " + req.body.mail.toLowerCase(), 'Это сообщение отправлено для восстановления пароля.', str)
             });
         });
 
