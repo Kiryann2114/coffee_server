@@ -338,6 +338,15 @@ app.post('/api/GetPaymentURL', (req, res) => {
                 let textHtml = "<p>заказ: "+ JSON.parse(data).id+" сформирован. После оплаты мы соберём заказ и отправим вам.</p>"
 
                 await sendMail(req.body.mail.toLowerCase(), "Заказ для " + req.body.mail.toLowerCase(), 'Это сообщение отправлено для заказа.', textHtml)
+
+                let textHtml1 = "<div>" +
+                    + "<p>заказ сформирован: "+ JSON.parse(data).id +"</p>" +
+                    + "<p>имя: "+ req.body.name +"</p>" +
+                    + "<p>телефон: "+ req.body.tel +"</p>" +
+                    + "<p>почта: "+ req.body.mail.toLowerCase() +"</p>" +
+                    + "</div>"
+
+                await sendMail("zakaz@godinecoffee.ru", "Заказ для " + req.body.mail.toLowerCase(), 'Это сообщение отправлено для заказа.', textHtml1)
             });
         });
 
