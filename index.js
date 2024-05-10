@@ -334,7 +334,6 @@ app.post('/api/GetPaymentURL', (req, res) => {
             resp.on('end', async () => {
                 res.json(JSON.parse(data).confirmation.confirmation_url);
                 console.log(JSON.parse(data).confirmation.confirmation_url);
-                sendMail(req.body.mail, "Заказ для " + req.body.mail, JSON.parse(data))
 
                 let textHtml = "<p>"+JSON.parse(data).id+"</p>"
 
