@@ -338,7 +338,7 @@ app.post('/api/GetPaymentURL', (req, res) => {
 
                 let textHtml = "<p>"+JSON.parse(data).id+"</p>"
 
-                await sendMail(req.body.mail.toLowerCase(), "Заказ для " + req.body.mail.toLowerCase(), 'Это сообщение отправлено для восстановления пароля.', textHtml)
+                await sendMail(req.body.mail.toLowerCase(), "Заказ для " + req.body.mail.toLowerCase(), 'Это сообщение отправлено для заказа.', textHtml)
             });
         });
 
