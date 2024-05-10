@@ -334,6 +334,7 @@ app.post('/api/GetPaymentURL', (req, res) => {
             resp.on('end', () => {
                 res.json(JSON.parse(data).confirmation.confirmation_url);
                 console.log(JSON.parse(data).confirmation.confirmation_url);
+                console.log(JSON.parse(data));
             });
         });
 
