@@ -306,6 +306,8 @@ app.post('/api/GetPaymentURL', (req, res) => {
             receipt:{
                 customer:{
                     email:req.body.mail,
+                    full_name: req.body.name,
+                    phone: req.body.tel.replace("(", '').replace(")", '').replace("+", '').replace("-", '')
                 },
                 items:arrItems
             },
@@ -339,7 +341,7 @@ app.post('/api/GetPaymentURL', (req, res) => {
 
                 await sendMail(req.body.mail.toLowerCase(), "Заказ для " + req.body.mail.toLowerCase(), 'Это сообщение отправлено для заказа.', textHtml)
 
-                let textHtml1 = "<p>заказ сформирован: "+ JSON.parse(data).id +"</p><br/><p> имя: "+ req.body.name +"</p><br/><p> телефон: "+ req.body.tel +"</p><br/><p> почта: "+ req.body.mail.toLowerCase() +"</p>"
+                let textHtml1 = "<p>заказ сформирован: "+ JSON.parse(data).id +"</p><br/><p> имя: "+ req.body.name +"</p><br/><p> телефон: "+ req.body.tel.replace("(", '').replace(")", '').replace("+", '').replace("-", '') +"</p><br/><p> почта: "+ req.body.mail.toLowerCase() +"</p>"
 
                 await sendMail("zakaz@godinecoffee.ru", "Заказ для " + req.body.mail.toLowerCase(), 'Это сообщение отправлено для заказа.', textHtml1)
             });
