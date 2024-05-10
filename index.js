@@ -306,7 +306,6 @@ app.post('/api/GetPaymentURL', (req, res) => {
             receipt:{
                 customer:{
                     email:req.body.mail,
-                    phone: req.body.tel.replace("(", '').replace(")", '').replace("+", '').replace("-", '')
                 },
                 items:arrItems
             },
