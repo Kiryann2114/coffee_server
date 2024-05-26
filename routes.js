@@ -1,0 +1,35 @@
+const express = require('express');
+const router = express.Router();
+const {loginAdmin,checkUser,registerUser, loginUser, logoutUser, refreshToken,
+    deleteRefreshToken, checkRefreshToken, updateTokensWithTheme, getUserByRefreshTokenHandler
+ } = require('./routes/auth');
+const {getTovar, deleteItem,addItem,updateItem} = require('./routes/items');
+const {countBasket, updateBasket,getBasket} = require('./routes/basket');
+const {getInfoUser,updateInfoUser, sendMailReset, resetPass} = require('./routes/user');
+const {getPaymentURL} = require('./routes/payment');
+
+router.post('/loginAdmin', loginAdmin);
+router.post('/checkUser', loginUser);
+router.post('/RegUser', registerUser);
+router.get('/tovar', getTovar);
+router.post('/deleteItem', deleteItem);
+router.post('/addItem', addItem);
+router.post('/UpdateItem', updateItem);
+router.post('/CountBasket', countBasket);
+router.post('/UpdateBasket', updateBasket);
+router.post('/GetBasket', getBasket);
+router.post('/GetPaymentURL', getPaymentURL);
+router.post('/GetInfoUser', getInfoUser);
+router.post('/UpdateInfoUser', updateInfoUser);
+router.post('/SendMailReset', sendMailReset);
+router.post('/ResetPass', resetPass);
+router.get('/checkToken', getUserByRefreshTokenHandler);
+//router.post('/login', loginUser);
+router.post('/logout', logoutUser);
+router.post('/refreshToken/:token', refreshToken);
+router.post('/deleteRefreshToken', deleteRefreshToken);
+router.post('/checkRefreshToken', checkRefreshToken);
+router.post('/updateTokensWithTheme', updateTokensWithTheme);
+
+
+module.exports = router;
