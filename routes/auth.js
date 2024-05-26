@@ -22,55 +22,55 @@ function loginAdmin(req, res) {
   });
 }
 
-// User check method
-function checkUser(req, res) {
-  if (!req.body.mail) {
-      return res.status(400).json({ error: 'Отсутствует адрес электронной почты в запросе' });
-  }
-  
-  let query = 'SELECT count(*) <> 0 AS res FROM users WHERE mail = ? AND password = ?';
-  connsql.query(query, [req.body.mail.toLowerCase(), md5(req.body.pass)], (err, result) => {
-      if (err) {
-          console.error('Error during checkUser:', err);
-          res.status(500).send('Server error');
-      } else {
-          res.json(result[0]);
-      }
-  });
-}
-
 const registerUser = async (req, res) => {
-    const validationResult = validateRegistration(req.body);
-    console.log(req.body);
-    if (!validationResult.success) {
+  const validationResult = validateRegistration(req.body);
+  console.log(req.body);
+  if (!validationResult.success) {
       return res.status(402).json({ error: validationResult.errors });
-    }
-  
-    const { firstName, lastName, email, username, password, confirmPassword, gender, phone } = req.body;
-  
-    const checkQuery = 'SELECT * FROM newusers WHERE login = ?';
-    connsql.query(checkQuery, [username], async (checkErr, checkResult) => {
-      if (checkErr) {
-        console.error('Ошибка при проверке пользователя: ', checkErr);
-        return res.status(500).json({ error: 'Ошибка сервера' });
-      }
-  
-      if (checkResult.length > 0) {
-        return res.status(400).json({ error: 'Пользователь с таким логином уже существует' });
-      }
-  
-      const hashedPassword = await hashPassword(password);
-  
-      const insertQuery = 'INSERT INTO newusers (firstName, lastName, email, login, password, gender, phone) VALUES (?, ?, ?, ?, ?, ?, ?)';
-      connsql.query(insertQuery, [firstName, lastName, email, username, hashedPassword, gender, phone], (insertErr, result) => {
-        if (insertErr) {
-          console.error('Ошибка при добавлении пользователя: ', insertErr);
+  }
+
+  const { firstName, lastName, email, username, password, confirmPassword, gender, phone } = req.body;
+
+  // Проверяем, занята ли указанная почта
+  const checkEmailQuery = 'SELECT * FROM newusers WHERE email = ?';
+  connsql.query(checkEmailQuery, [email], async (checkEmailErr, checkEmailResult) => {
+      if (checkEmailErr) {
+          console.error('Ошибка при проверке почты: ', checkEmailErr);
           return res.status(500).json({ error: 'Ошибка сервера' });
-        }
-        res.status(200).json({ message: 'Пользователь успешно зарегистрирован', username: username, jwtToken: null });
+      }
+
+      if (checkEmailResult.length > 0) {
+          return res.status(400).json({ error: 'Эта почта уже используется' });
+      }
+
+      // Проверяем, занят ли указанный логин
+      const checkUsernameQuery = 'SELECT * FROM newusers WHERE login = ?';
+      connsql.query(checkUsernameQuery, [username], async (checkUsernameErr, checkUsernameResult) => {
+          if (checkUsernameErr) {
+              console.error('Ошибка при проверке логина: ', checkUsernameErr);
+              return res.status(500).json({ error: 'Ошибка сервера' });
+          }
+
+          if (checkUsernameResult.length > 0) {
+              return res.status(400).json({ error: 'Этот логин уже используется' });
+          }
+
+          // Хэшируем пароль
+          const hashedPassword = await hashPassword(password);
+
+          // Вставляем данные пользователя в базу данных
+          const insertQuery = 'INSERT INTO newusers (firstName, lastName, email, login, password, gender, phone) VALUES (?, ?, ?, ?, ?, ?, ?)';
+          connsql.query(insertQuery, [firstName, lastName, email, username, hashedPassword, gender, phone], (insertErr, result) => {
+              if (insertErr) {
+                  console.error('Ошибка при добавлении пользователя: ', insertErr);
+                  return res.status(500).json({ error: 'Ошибка сервера' });
+              }
+              res.status(200).json({ message: 'Пользователь успешно зарегистрирован', username: username, jwtToken: null });
+          });
       });
-    });
-  };
+  });
+};
+
 
 // Генерация случайной строки в формате hex
 const generateRandomSecret = () => {
@@ -317,16 +317,22 @@ const refreshToken = (req, res) => {
     if (!refreshToken) {
       return res.status(400).json({ error: 'Отсутствует refreshToken в запросе' });
     }
-  
-    // Проверяем refreshToken в базе данных и удаляем его, если он существует
-    connsql.query('DELETE FROM UserToken WHERE refreshToken = ?', [refreshToken], (err, result) => {
+
+    jwt.verify(refreshToken, global.REFRESH_TOKEN_SECRET, (err, decoded) => {
       if (err) {
-        console.error('Ошибка при удалении refreshToken из базы данных:', err);
-        return res.status(500).json({ error: 'Ошибка сервера' });
-      } else {
-        console.log('refreshToken успешно удалён из базы данных');
-        return res.status(200).json({ message: 'Вы успешно вышли из системы' });
+          console.error('Ошибка при проверке валидности refreshToken:', err);
+          return res.status(401).json({ error: 'Недействительный токен' });
       }
+      // Проверяем refreshToken в базе данных и удаляем его, если он существует
+      connsql.query('DELETE FROM UserToken WHERE refreshToken = ?', [refreshToken], (err, result) => {
+        if (err) {
+          console.error('Ошибка при удалении refreshToken из базы данных:', err);
+          return res.status(500).json({ error: 'Ошибка сервера' });
+        } else {
+          console.log('refreshToken успешно удалён из базы данных');
+          return res.status(200).json({ message: 'Вы успешно вышли из системы' });
+        }
+      });
     });
   };
   const deleteRefreshToken = (req, res) => {
@@ -387,7 +393,6 @@ const refreshToken = (req, res) => {
   };
 module.exports = {
     loginAdmin,
-    checkUser,
     registerUser,
     loginUser,
     logoutUser,
