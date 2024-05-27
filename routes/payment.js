@@ -1,10 +1,12 @@
 const https = require('https');
 const { fastRandString } = require('../utils');
 const { sendMail } = require('../mailer');
-const connsql = require('../database');
+//const connsql = require('../database');
+const pool = require('../pool');
 
 // Generate payment URL for user
 function getPaymentURL(req, res) {
+    console.log("мы в методе getPaymentURL");
     let arrItems = [];
     let arrBasket = req.body.basket.split(",");
     arrItems.push({
@@ -19,12 +21,21 @@ function getPaymentURL(req, res) {
 
     let arrID = arrBasket.map(item => item.split(":")[0]).join(",");
 
-    let query = `SELECT price, name FROM Tovar WHERE id in (${arrID})`;
-    connsql.query(query, (err, result) => {
+    const query = `SELECT price, name FROM Tovar WHERE id IN (${arrID})`;
+
+    pool.getConnection((err, connection) => {
         if (err) {
-            console.error('Error during GetPaymentURL:', err);
-            res.status(500).send('Server error');
-        } else {
+            console.error('Ошибка при получении соединения из пула:', err);
+            return res.status(500).send('Ошибка сервера');
+        }
+
+        connection.query(query, (err, result) => {
+            if (err) {
+                console.error('Ошибка при запросе Tovar:', err);
+                connection.release();
+                return res.status(500).send('Ошибка сервера');
+            }
+
             for (let i = 0; i < arrBasket.length; i++) {
                 let [itemId, itemQty] = arrBasket[i].split(":");
                 arrItems.push({
@@ -37,6 +48,7 @@ function getPaymentURL(req, res) {
                     payment_mode: 'full_payment',
                 });
             }
+
             const url = 'https://api.yookassa.ru/v3/payments';
             const base64Credentials = Buffer.from('369984:test_3l-27_egpYA4GB8lsVLx1W5QxR0CGDxRQLG6X_VMHvk').toString('base64');
             const idempotenceKey = fastRandString();
@@ -89,15 +101,16 @@ function getPaymentURL(req, res) {
             });
 
             request.on('error', (error) => {
-                console.error('Error:', error);
-                res.status(500).send('Server error');
+                console.error('Ошибка:', error);
+                res.status(500).send('Ошибка сервера');
             });
 
             request.write(requestDataString);
             request.end();
-        }
+        });
     });
 }
+
 
 module.exports = {
     getPaymentURL
