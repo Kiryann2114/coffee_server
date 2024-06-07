@@ -107,7 +107,7 @@ app.post('/api/addItem', (req, res) => {
         if(result[0]){
             let query1 = 'SELECT MAX(id)+1 as ID FROM Tovar';
             connsql.query(query1,(err,result,field) => {
-                let query2 = "INSERT INTO Tovar (id, name, opisanie, price, optprice) VALUES ('" + result[0].ID + "', '', '', '0', '0')";
+                let query2 = "INSERT INTO Tovar (id, name, opisanie, price, optprice, price250, optprice250) VALUES ('" + result[0].ID + "', '', '', '0', '0', '0', '0')";
                 connsql.query(query2)
             })
         }
@@ -118,7 +118,7 @@ app.post('/api/UpdateItem', (req, res) => {
     let query = 'select count(*) <> 0 as res from users where id = 0 and mail = "' + req.body.mail.toLowerCase() + '" and password = "' + md5(req.body.pass) + '"';
     connsql.query(query,(err,result,field) => {
         if(result[0]){
-            let query1 = "UPDATE Tovar SET name = '" + req.body.name + "', opisanie = '" + req.body.opisanie + "' ,price = '" + req.body.price + "', optprice = '" + req.body.optprice + "' WHERE Tovar.id = " + req.body.id;
+            let query1 = "UPDATE Tovar SET name = '" + req.body.name + "', opisanie = '" + req.body.opisanie + "' ,price = '" + req.body.price + "', optprice = '" + req.body.optprice + "', price250 = '" + req.body.price250 + "', optprice250 = '" + req.body.optprice250 + "' WHERE Tovar.id = " + req.body.id;
             connsql.query(query1)
         }
     })
