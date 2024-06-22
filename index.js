@@ -276,7 +276,7 @@ app.post('/api/GetPaymentURL', (req, res) => {
         }
     }
 
-    let query = 'SELECT price,name FROM Tovar WHERE id in (' + arrID + ')'
+    let query = 'SELECT price,price250,name FROM Tovar WHERE id in (' + arrID + ')'
 
     connsql.query(query,(err,result,field) => {
         for(let i = 0; i < arrBasket.length; i++) {
