@@ -269,10 +269,10 @@ app.post('/api/GetPaymentURL', (req, res) => {
         let Item = arrBasket[i].split(":")
 
         if(i === arrBasket.length-1){
-            arrID += Item[0]
+            arrID += Item[0].split("_")[0]
         }
         else {
-            arrID += Item[0] + ","
+            arrID += Item[0].split("_")[0] + ","
         }
     }
 
@@ -282,16 +282,28 @@ app.post('/api/GetPaymentURL', (req, res) => {
         for(let i = 0; i < arrBasket.length; i++) {
 
             let Item = arrBasket[i].split(":")
-
-            arrItems.push({
-                description:result[i].name,
-                amount: { value: result[i].price + '.00', currency: 'RUB' },
-                vat_code:1,
-                quantity:Item[1],
-                measure:'piece',
-                payment_subject:'commodity',
-                payment_mode:'full_payment',
-            });
+            if(arrBasket[i].split(":")[0].split("_")[1] === "1"){
+                arrItems.push({
+                    description:result[i].name,
+                    amount: { value: result[i].price + '.00', currency: 'RUB' },
+                    vat_code:1,
+                    quantity:Item[1],
+                    measure:'piece',
+                    payment_subject:'commodity',
+                    payment_mode:'full_payment',
+                });
+            }
+            else {
+                arrItems.push({
+                    description:result[i].name,
+                    amount: { value: result[i].price250 + '.00', currency: 'RUB' },
+                    vat_code:1,
+                    quantity:Item[1],
+                    measure:'piece',
+                    payment_subject:'commodity',
+                    payment_mode:'full_payment',
+                });
+            }
         }
         const url = 'https://api.yookassa.ru/v3/payments';
         const base64Credentials = Buffer.from('369984:test_3l-27_egpYA4GB8lsVLx1W5QxR0CGDxRQLG6X_VMHvk').toString('base64');
