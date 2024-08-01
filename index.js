@@ -253,7 +253,7 @@ app.post('/api/GetPaymentURL', (req, res) => {
     let arrBasket = req.body.basket.split(",")
 
     arrItems.push({
-        description:'Доставка',
+        description:'Доставка ' + req.body.adress,
         amount: { value: req.body.delprice, currency: 'RUB' },
         vat_code:1,
         quantity:"1",
