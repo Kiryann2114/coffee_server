@@ -374,3 +374,11 @@ app.post('/api/checkPromo', (req, res) => {
         res.json(result[0]);
     })
 });
+
+app.post('/api/GetUserHistoryPromo', (req, res) => {
+    let query = 'select HistoryPromo as res from users where mail = "' + req.body.mail.toLowerCase() + '" and password = "' + md5(req.body.pass) + '"';
+
+    connsql.query(query,(err,result,field) => {
+        res.json(result[0]);
+    })
+});
