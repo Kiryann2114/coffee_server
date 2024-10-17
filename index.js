@@ -368,7 +368,7 @@ app.post('/api/GetPaymentURL', (req, res) => {
 });
 
 app.post('/api/checkPromo', (req, res) => {
-    let query = 'select count(*) <> 0 as res from PromoCods where code = "' + req.body.Promo.toLowerCase() + '"';
+    let query = 'select count(*) <> 0 as res from PromoCods where code = "' + req.body.Promo.toUpperCase() + '"';
 
     connsql.query(query,(err,result,field) => {
         res.json(result[0]);
