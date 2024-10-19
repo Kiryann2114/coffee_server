@@ -383,3 +383,13 @@ app.post('/api/GetUserHistoryPromo', (req, res) => {
         res.json(result[0]);
     })
 });
+
+app.post('/api/UpdateHistoryPromo', (req, res) => {
+    let query1 = 'select HistoryPromo from users where mail = "' + req.body.mail.toLowerCase() + '" and password = "' + md5(req.body.pass) + '"';
+
+    connsql.query(query1,(err,result,field) => {
+        let HP = result[0].HistoryPromo + ' ' + req.body.PromoCode.toUpperCase();
+        let query2 = 'UPDATE users SET HistoryPromo = "' + HP + '" WHERE mail = "' + req.body.mail.toLowerCase() + '" and password = "' + md5(req.body.pass) + '"';
+        connsql.query(query2,(err,result,field) => {})
+    })
+});
