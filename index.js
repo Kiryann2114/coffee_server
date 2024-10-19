@@ -281,6 +281,7 @@ app.post('/api/GetPaymentURL', (req, res) => {
     connsql.query(query,(err,result,field) => {
         for(let i = 0; i < arrBasket.length; i++) {
 
+            /////////////////////////////////////////////////////////Тут надо добаввить процент скидки
             let Item = arrBasket[i].split(":")
             if(arrBasket[i].split(":")[0].split("_")[1] === "1"){
                 arrItems.push({
@@ -381,10 +382,4 @@ app.post('/api/GetUserHistoryPromo', (req, res) => {
     connsql.query(query,(err,result,field) => {
         res.json(result[0]);
     })
-});
-
-app.post('/api/UpdateUsingPromo', (req, res) => {
-    let query = 'UPDATE users SET UsingPromo = "' + req.body.PromoCode.toUpperCase() + '" WHERE mail = "' + req.body.mail.toLowerCase() + '" and password = "' + md5(req.body.pass) + '"';
-
-    connsql.query(query,(err,result,field) => {})
 });
