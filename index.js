@@ -382,3 +382,9 @@ app.post('/api/GetUserHistoryPromo', (req, res) => {
         res.json(result[0]);
     })
 });
+
+app.post('/api/UpdateUsingPromo', (req, res) => {
+    let query = 'UPDATE users SET UsingPromo = "' + req.body.PromoCode.toUpperCase() + '" WHERE mail = "' + req.body.mail.toLowerCase() + '" and password = "' + md5(req.body.pass) + '"';
+
+    connsql.query(query,(err,result,field) => {})
+});
