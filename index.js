@@ -282,7 +282,7 @@ app.post('/api/GetPaymentURL', (req, res) => {
 
     let query2 = 'select count(*) <> 0 as res from PromoCods where code = "' + req.body.Promo.toUpperCase() + '"';
 
-    let query3 = 'select HistoryPromo as res from users where mail = "' + req.body.mail.toLowerCase() + '" and password = "' + md5(req.body.pass) + '"';
+    let query3 = 'select HistoryPromo as res from users where mail = "' + req.body.Mail.toLowerCase() + '" and password = "' + md5(req.body.Pass) + '"';
 
 
     connsql.query(query,(err,result,field) => {
