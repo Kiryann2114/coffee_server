@@ -284,7 +284,7 @@ app.post('/api/GetPaymentURL', (req, res) => {
 
     let query3 = 'select HistoryPromo as res from users where mail = "' + req.body.Mail.toLowerCase() + '" and password = "' + md5(req.body.Pass) + '"';
 
-    let query4 = 'select HistoryPromo from users where mail = "' + req.body.mail.toLowerCase() + '" and password = "' + md5(req.body.pass) + '"';
+    let query4 = 'select HistoryPromo from users where mail = "' + req.body.Mail.toLowerCase() + '" and password = "' + md5(req.body.Pass) + '"';
 
     let PromoSale = 1;
 
@@ -310,7 +310,7 @@ app.post('/api/GetPaymentURL', (req, res) => {
                             connsql.query(query4,(err4,result4,field4) => {
                                 let HP = result4[0].HistoryPromo + ' ' + req.body.PromoCode.toUpperCase();
                                 console.log(HP)
-                                let query5 = 'UPDATE users SET HistoryPromo = "' + HP + '" WHERE mail = "' + req.body.mail.toLowerCase() + '" and password = "' + md5(req.body.pass) + '"';
+                                let query5 = 'UPDATE users SET HistoryPromo = "' + HP + '" WHERE mail = "' + req.body.Mail.toLowerCase() + '" and password = "' + md5(req.body.Pass) + '"';
                                 connsql.query(query5,(err5,result5,field5) => {})
                             })
                         })
