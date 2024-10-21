@@ -304,101 +304,107 @@ app.post('/api/GetPaymentURL', (req, res) => {
                         connsql.query(query1,(err,result1,field) => {
                             PromoSale = 1-(Number(result1[0].res)*0.01);
                             console.log(PromoSale)
+                            GetURL()
                         })
                     }
                 })
             }
         })
     }
+    else{
+        GetURL()
+    }
 
-    connsql.query(query,(err,result,field) => {
+    function GetURL() {
+        connsql.query(query,(err,result,field) => {
 
-        for(let i = 0; i < arrBasket.length; i++) {
+            for(let i = 0; i < arrBasket.length; i++) {
 
-            let Item = arrBasket[i].split(":")
-            if(arrBasket[i].split(":")[0].split("_")[1] === "1"){
-                arrItems.push({
-                    description:result[i].name,
-                    amount: { value: String(Number(result[i].price) * PromoSale) + '.00', currency: 'RUB' },
-                    vat_code:1,
-                    quantity:Item[1],
-                    measure:'piece',
-                    payment_subject:'commodity',
-                    payment_mode:'full_payment',
-                });
+                let Item = arrBasket[i].split(":")
+                if(arrBasket[i].split(":")[0].split("_")[1] === "1"){
+                    arrItems.push({
+                        description:result[i].name,
+                        amount: { value: String(Number(result[i].price) * PromoSale) + '.00', currency: 'RUB' },
+                        vat_code:1,
+                        quantity:Item[1],
+                        measure:'piece',
+                        payment_subject:'commodity',
+                        payment_mode:'full_payment',
+                    });
+                }
+                else {
+                    arrItems.push({
+                        description:result[i].name,
+                        amount: { value: String(Number(result[i].price250) * PromoSale) + '.00', currency: 'RUB' },
+                        vat_code:1,
+                        quantity:Item[1],
+                        measure:'piece',
+                        payment_subject:'commodity',
+                        payment_mode:'full_payment',
+                    });
+                }
             }
-            else {
-                arrItems.push({
-                    description:result[i].name,
-                    amount: { value: String(Number(result[i].price250) * PromoSale) + '.00', currency: 'RUB' },
-                    vat_code:1,
-                    quantity:Item[1],
-                    measure:'piece',
-                    payment_subject:'commodity',
-                    payment_mode:'full_payment',
-                });
-            }
-        }
-        const url = 'https://api.yookassa.ru/v3/payments';
-        const base64Credentials = Buffer.from('327023:live_0yM2r3_HHZgB07NQAGeMds1DButp4MfGl2nKzcCU-lo').toString('base64');
-        const idempotenceKey = fastRandString();
-        console.log(arrItems);
-        const requestData = {
-            amount: { value: String( (Number(req.body.baskCount) * PromoSale) + Number(req.body.delprice)) + '.00', currency: 'RUB' },
-            capture: true,
-            confirmation: {
-                type: 'redirect',
-                return_url: 'https://godinecoffee.ru/'
-            },
-            receipt:{
-                customer:{
-                    email:req.body.mail,
+            const url = 'https://api.yookassa.ru/v3/payments';
+            const base64Credentials = Buffer.from('327023:live_0yM2r3_HHZgB07NQAGeMds1DButp4MfGl2nKzcCU-lo').toString('base64');
+            const idempotenceKey = fastRandString();
+            console.log(arrItems);
+            const requestData = {
+                amount: { value: String( (Number(req.body.baskCount) * PromoSale) + Number(req.body.delprice)) + '.00', currency: 'RUB' },
+                capture: true,
+                confirmation: {
+                    type: 'redirect',
+                    return_url: 'https://godinecoffee.ru/'
                 },
-                items:arrItems
-            },
-            description: 'Оплата заказа для ' + req.body.mail
-        };
-        const requestDataString = JSON.stringify(requestData);
+                receipt:{
+                    customer:{
+                        email:req.body.mail,
+                    },
+                    items:arrItems
+                },
+                description: 'Оплата заказа для ' + req.body.mail
+            };
+            const requestDataString = JSON.stringify(requestData);
 
-        const options = {
-            hostname: 'api.yookassa.ru',
-            path: '/v3/payments',
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Basic ${base64Credentials}`,
-                'Idempotence-Key': idempotenceKey,
-                'Content-Length': Buffer.byteLength(requestDataString)
-            }
-        };
+            const options = {
+                hostname: 'api.yookassa.ru',
+                path: '/v3/payments',
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Basic ${base64Credentials}`,
+                    'Idempotence-Key': idempotenceKey,
+                    'Content-Length': Buffer.byteLength(requestDataString)
+                }
+            };
 
-        const request = https.request(options, (resp) => {
-            let data = '';
-            resp.on('data', (chunk) => {
-                data += chunk;
+            const request = https.request(options, (resp) => {
+                let data = '';
+                resp.on('data', (chunk) => {
+                    data += chunk;
+                });
+
+                resp.on('end', async () => {
+                    res.json(JSON.parse(data).confirmation.confirmation_url);
+                    console.log(JSON.parse(data).confirmation.confirmation_url);
+
+                    let textHtml = "<p>заказ: "+ JSON.parse(data).id+" сформирован. После оплаты мы соберём заказ и отправим вам.</p>"
+
+                    await sendMail(req.body.mail.toLowerCase(), "Заказ для " + req.body.mail.toLowerCase(), 'Это сообщение отправлено для заказа.', textHtml)
+
+                    let textHtml1 = "<p>заказ сформирован: "+ JSON.parse(data).id +"</p><br/><p> имя: "+ req.body.name +"</p><br/><p> телефон: "+ req.body.tel.replace("(", '').replace(")", '').replace("+", '').replace("-", '') +"</p><br/><p> почта: "+ req.body.mail.toLowerCase() +"</p>"
+
+                    await sendMail("zakaz@godinecoffee.ru", "Заказ для " + req.body.mail.toLowerCase(), 'Это сообщение отправлено для заказа.', textHtml1)
+                });
             });
 
-            resp.on('end', async () => {
-                res.json(JSON.parse(data).confirmation.confirmation_url);
-                console.log(JSON.parse(data).confirmation.confirmation_url);
-
-                let textHtml = "<p>заказ: "+ JSON.parse(data).id+" сформирован. После оплаты мы соберём заказ и отправим вам.</p>"
-
-                await sendMail(req.body.mail.toLowerCase(), "Заказ для " + req.body.mail.toLowerCase(), 'Это сообщение отправлено для заказа.', textHtml)
-
-                let textHtml1 = "<p>заказ сформирован: "+ JSON.parse(data).id +"</p><br/><p> имя: "+ req.body.name +"</p><br/><p> телефон: "+ req.body.tel.replace("(", '').replace(")", '').replace("+", '').replace("-", '') +"</p><br/><p> почта: "+ req.body.mail.toLowerCase() +"</p>"
-
-                await sendMail("zakaz@godinecoffee.ru", "Заказ для " + req.body.mail.toLowerCase(), 'Это сообщение отправлено для заказа.', textHtml1)
+            request.on('error', (error) => {
+                console.error('Error:', error);
             });
-        });
 
-        request.on('error', (error) => {
-            console.error('Error:', error);
-        });
-
-        request.write(requestDataString);
-        request.end();
-    })
+            request.write(requestDataString);
+            request.end();
+        })
+    }
 });
 
 app.post('/api/checkPromo', (req, res) => {
