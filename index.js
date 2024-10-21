@@ -284,10 +284,10 @@ app.post('/api/GetPaymentURL', (req, res) => {
 
     let query3 = 'select HistoryPromo as res from users where mail = "' + req.body.Mail.toLowerCase() + '" and password = "' + md5(req.body.Pass) + '"';
 
-    let PromoSale = 1;
-
 
     connsql.query(query,(err,result,field) => {
+
+        let PromoSale = 1;
 
         if(req.body.Promo!==""){
             connsql.query(query2,(err,result2,field) => {
