@@ -248,6 +248,37 @@ app.post('/api/ResetPass', async (req, res) => {
 
 app.post('/api/GetPaymentURL', (req, res) => {
 
+    let query1 = 'select sale as res from PromoCods where code = "' + req.body.Promo.toUpperCase() + '"';
+
+    let query2 = 'select count(*) <> 0 as res from PromoCods where code = "' + req.body.Promo.toUpperCase() + '"';
+
+    let query3 = 'select HistoryPromo as res from users where mail = "' + req.body.Mail.toLowerCase() + '" and password = "' + md5(req.body.Pass) + '"';
+
+    function GetPromoSale() {
+        let PromoSale = 1;
+        if(req.body.Promo!==""){
+            connsql.query(query2,(err,result2,field) => {
+                if(result2[0].res!==0){
+                    connsql.query(query3,(err,result3,field) => {
+                        let arr = result3[0].res.split(' ')
+                        let r = false;
+                        for (let i = 0; i < arr.length; i++) {
+                            if (arr[i] === req.body.Promo) {
+                                r = true;
+                            }
+                        }
+                        if(!r){
+                            connsql.query(query1,(err,result1,field) => {
+                                PromoSale = 1-(Number(result1[0].res)*0.01);
+                            })
+                        }
+                    })
+                }
+            })
+        }
+        return PromoSale
+    }
+
     let arrItems = []
 
     let arrBasket = req.body.basket.split(",")
@@ -278,37 +309,8 @@ app.post('/api/GetPaymentURL', (req, res) => {
 
     let query = 'SELECT price,price250,name FROM Tovar WHERE id in (' + arrID + ')'
 
-    let query1 = 'select sale as res from PromoCods where code = "' + req.body.Promo.toUpperCase() + '"';
-
-    let query2 = 'select count(*) <> 0 as res from PromoCods where code = "' + req.body.Promo.toUpperCase() + '"';
-
-    let query3 = 'select HistoryPromo as res from users where mail = "' + req.body.Mail.toLowerCase() + '" and password = "' + md5(req.body.Pass) + '"';
-
 
     connsql.query(query,(err,result,field) => {
-
-        let PromoSale = 1;
-
-        if(req.body.Promo!==""){
-            connsql.query(query2,(err,result2,field) => {
-                if(result2[0].res!==0){
-                    connsql.query(query3,(err,result3,field) => {
-                        let arr = result3[0].res.split(' ')
-                        let r = false;
-                        for (let i = 0; i < arr.length; i++) {
-                            if (arr[i] === req.body.Promo) {
-                                r = true;
-                            }
-                        }
-                        if(!r){
-                            connsql.query(query1,(err,result1,field) => {
-                                PromoSale = 1-(Number(result1[0].res)*0.01);
-                            })
-                        }
-                    })
-                }
-            })
-        }
 
         for(let i = 0; i < arrBasket.length; i++) {
 
@@ -316,7 +318,7 @@ app.post('/api/GetPaymentURL', (req, res) => {
             if(arrBasket[i].split(":")[0].split("_")[1] === "1"){
                 arrItems.push({
                     description:result[i].name,
-                    amount: { value: String(Number(result[i].price) * PromoSale) + '.00', currency: 'RUB' },
+                    amount: { value: String(Number(result[i].price) * GetPromoSale()) + '.00', currency: 'RUB' },
                     vat_code:1,
                     quantity:Item[1],
                     measure:'piece',
@@ -327,7 +329,7 @@ app.post('/api/GetPaymentURL', (req, res) => {
             else {
                 arrItems.push({
                     description:result[i].name,
-                    amount: { value: String(Number(result[i].price250) * PromoSale) + '.00', currency: 'RUB' },
+                    amount: { value: String(Number(result[i].price250) * GetPromoSale()) + '.00', currency: 'RUB' },
                     vat_code:1,
                     quantity:Item[1],
                     measure:'piece',
@@ -341,7 +343,7 @@ app.post('/api/GetPaymentURL', (req, res) => {
         const idempotenceKey = fastRandString();
         console.log(arrItems);
         const requestData = {
-            amount: { value: String( (Number(req.body.baskCount) * PromoSale) + Number(req.body.delprice)) + '.00', currency: 'RUB' },
+            amount: { value: String( (Number(req.body.baskCount) * GetPromoSale()) + Number(req.body.delprice)) + '.00', currency: 'RUB' },
             capture: true,
             confirmation: {
                 type: 'redirect',
