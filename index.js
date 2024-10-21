@@ -395,7 +395,7 @@ app.post('/api/UpdateHistoryPromo', (req, res) => {
 });
 
 app.post('/api/GetProsent', (req, res) => {
-    let query = 'select sale as res from PromoCods where code = "' + req.body.PromoCode.toUpperCase() + '"';
+    let query = 'select sale as res from PromoCods where code = "' + req.body.Promo.toUpperCase() + '"';
 
     connsql.query(query,(err,result,field) => {
         res.json(result[0]);
