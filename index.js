@@ -300,6 +300,7 @@ app.post('/api/GetPaymentURL', (req, res) => {
                             }
                         }
                         if(!r){
+                            console.log(PromoSale)
                             connsql.query(query1,(err,result1,field) => {
                                 PromoSale = 1-(Number(result1[0].res)*0.01);
                             })
@@ -308,6 +309,8 @@ app.post('/api/GetPaymentURL', (req, res) => {
                 }
             })
         }
+
+        console.log(PromoSale)
 
         for(let i = 0; i < arrBasket.length; i++) {
 
