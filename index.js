@@ -308,7 +308,7 @@ app.post('/api/GetPaymentURL', (req, res) => {
                             console.log(PromoSale)
                             GetURL()
                             connsql.query(query4,(err4,result4,field4) => {
-                                let HP = result4[0].HistoryPromo + ' ' + req.body.PromoCode.toUpperCase();
+                                let HP = result4[0].HistoryPromo + ' ' + req.body.Promo.toUpperCase();
                                 console.log(HP)
                                 let query5 = 'UPDATE users SET HistoryPromo = "' + HP + '" WHERE mail = "' + req.body.Mail.toLowerCase() + '" and password = "' + md5(req.body.Pass) + '"';
                                 connsql.query(query5,(err5,result5,field5) => {})
