@@ -393,3 +393,11 @@ app.post('/api/UpdateHistoryPromo', (req, res) => {
         connsql.query(query2,(err,result,field) => {})
     })
 });
+
+app.post('/api/GetProsent', (req, res) => {
+    let query = 'select sale as res from PromoCods where code = "' + req.body.PromoCode.toUpperCase() + '"';
+
+    connsql.query(query,(err,result,field) => {
+        res.json(result[0]);
+    })
+});
