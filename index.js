@@ -257,8 +257,10 @@ app.post('/api/GetPaymentURL', (req, res) => {
     function GetPromoSale() {
         let PromoSale = 1;
         if(req.body.Promo!==""){
+            console.log(1)
             connsql.query(query2,(err,result2,field) => {
                 if(result2[0].res!==0){
+                    console.log(2)
                     connsql.query(query3,(err,result3,field) => {
                         let arr = result3[0].res.split(' ')
                         let r = false;
@@ -268,8 +270,10 @@ app.post('/api/GetPaymentURL', (req, res) => {
                             }
                         }
                         if(!r){
+                            console.log(3)
                             connsql.query(query1,(err,result1,field) => {
                                 PromoSale = 1-(Number(result1[0].res)*0.01);
+                                console.log(PromoSale)
                             })
                         }
                     })
