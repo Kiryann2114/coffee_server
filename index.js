@@ -20,7 +20,7 @@ async function sendMail(email, theme, text, textHtml) {
         secure: false,
         auth: {
             user: 'info@godinecoffee.ru',
-            pass: 'gckpbjasgcbcybxe'
+            pass: 'iolivkzcrvvgnqmv'
         }
     });
 
