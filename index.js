@@ -16,8 +16,8 @@ async function sendMail(email, theme, text, textHtml) {
 
     let transporter = nodemailer.createTransport({
         host: "smtp.yandex.ru",
-        port: 25,
-        secure: false,
+        port: 465,
+        secure: true,
         auth: {
             user: 'info@godinecoffee.ru',
             pass: 'iolivkzcrvvgnqmv'
@@ -453,8 +453,8 @@ async function testEmailConnection() {
     try {
         const transporter = nodemailer.createTransport({
             host: "smtp.yandex.ru",
-            port: 25,
-            secure: false,
+            port: 465,
+            secure: true,
             auth: {
                 user: 'info@godinecoffee.ru',
                 pass: 'iolivkzcrvvgnqmv'
