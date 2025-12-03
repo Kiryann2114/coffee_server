@@ -16,7 +16,7 @@ async function sendMail(email, theme, text, textHtml) {
 
     let transporter = nodemailer.createTransport({
         host: "smtp.yandex.ru",
-        port: 465,
+        port: 25,
         secure: false,
         auth: {
             user: 'info@godinecoffee.ru',
@@ -447,4 +447,44 @@ app.post('/api/GetProsent', (req, res) => {
     connsql.query(query,(err,result,field) => {
         res.json(result[0]);
     })
+});
+
+async function testEmailConnection() {
+    try {
+        const transporter = nodemailer.createTransport({
+            host: "smtp.yandex.ru",
+            port: 25,
+            secure: false,
+            auth: {
+                user: 'info@godinecoffee.ru',
+                pass: 'iolivkzcrvvgnqmv'
+            }
+        });
+
+        // Проверка соединения
+        await transporter.verify();
+        console.log('✅ SMTP подключение работает');
+
+        // Тестовая отправка
+        const testInfo = await transporter.sendMail({
+            from: 'GodineCoffee <info@godinecoffee.ru>',
+            to: 'zakaz@godinecoffee.ru',
+            subject: 'Тест Nodemailer',
+            text: 'Тестовое письмо',
+            html: '<b>Тестовое письмо</b>'
+        });
+
+        console.log('✅ Тестовое письмо отправлено:', testInfo.messageId);
+        return true;
+
+    } catch (error) {
+        console.error('❌ Ошибка Nodemailer:', error.message);
+        return false;
+    }
+}
+
+// Добавьте маршрут для проверки
+app.get('/api/test-email', async (req, res) => {
+    const result = await testEmailConnection();
+    res.json({ success: result });
 });
