@@ -17,6 +17,6 @@
     "md5": "^2.3.0",
     "mysql2": "^3.9.3",
     "node-fetch": "^3.3.2",
-    "nodemailer": "^6.9.13"
+    "nodemailer": "^7.0.11"
   }
 }

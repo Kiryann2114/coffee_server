@@ -16,7 +16,7 @@ async function sendMail(email, theme, text, textHtml) {
 
     let transporter = nodemailer.createTransport({
         host: "smtp.yandex.ru",
-        port: 25,
+        port: 465,
         secure: false,
         auth: {
             user: 'info@godinecoffee.ru',
